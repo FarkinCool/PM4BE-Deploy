@@ -6,15 +6,16 @@ dotenvConfig({path: '.development.env'});
 const config= {
 type:'postgres',
     database: process.env.DB_NAME,
-    //host: process.env.DB_HOST,
-    host: 'postgresdb',
+    //host: process.env.DB_HOST,   local
+    // host: 'postgresdb',    docer
+    host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USENAME,
     password: process.env.DB_PASSWORD,
     autoLoadEntities:true,
     logging: ["query", "error"], 
-    dropSchema: false, // false produccion
-    synchronize: false, // false produccion
+    dropSchema: true, // false produccion
+    synchronize: true, // false produccion
     entities: ['dist/**/*.entity{.ts,.js}'],
     migrations: ['dist/migrations/*{.ts,.js}'],
 
