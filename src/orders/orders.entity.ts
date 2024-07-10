@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger";
 import { OrderDetails } from "src/orderDetails/orderDetails.entity";
 import { User } from "src/users/users.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -17,6 +18,10 @@ export class Orders{
      */
     @Column({type:"date" , nullable: false})
     date: string;
+
+    @ApiHideProperty()
+    @Column({type:"boolean", default:true})
+    status: boolean;
 
     @ManyToOne(() => User, (user) => user.orders)
     @JoinColumn({name: 'user_id'})

@@ -28,12 +28,12 @@ let AuthGuard = class AuthGuard {
             if (!user)
                 throw new common_1.UnauthorizedException("error for valid to token");
             user.exp = new Date(user.exp * 1000);
-            user.roles = user.roles ? [user_roles_1.Role.Admin] : [user_roles_1.Role.User];
+            user.roles = user.isAdmin ? [user_roles_1.Role.Admin] : [user_roles_1.Role.User];
             request.user = user;
             return true;
         }
         catch (error) {
-            throw new common_1.UnauthorizedException("error for valid to token");
+            throw new common_1.UnauthorizedException("error for valid to toker");
         }
     }
 };

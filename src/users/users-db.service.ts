@@ -3,7 +3,8 @@ import { User } from "./users.entity";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { Orders } from "src/orders/orders.entity";
-
+import { UpdateUserDto } from "./users.updateDto";
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -34,22 +35,37 @@ export class UsersDbService{
             {where: {id},
             relations:{orders:true}
         });
-
+        console.log("hola", userfound);
         if(!userfound) throw new NotFoundException("User not found with ID: ", id);
-        return userfound;
+        return  userfound;
     }
 
-    async updateDbUser(id: string, user: Partial<User>): Promise<string>{
-        await this.usersDbRepository.update(id,user);
+    async updateDbUser(id: string, user: Partial<UpdateUserDto>): Promise<string>{
+        const foundUser = await this.getDbUserbyId(id);
+        if(!foundUser) throw new NotFoundException("User not found");
+        const {password, confirmpassword} = user;
+        if((password && !confirmpassword) || !password && confirmpassword)
+            throw new BadRequestException("both passwords should be present");
+
+        if(password && confirmpassword){
+            const hashpassword = await bcrypt.hash(password, 10);
+            if(!hashpassword) throw new BadRequestException("error in hashing password");
+            delete user.confirmpassword;
+            await this.usersDbRepository.update(id,
+                {...user,
+                password: hashpassword,}
+            );  
+        }
+        else{
+            await this.usersDbRepository.update(id,user);
+        }
         return id;
     }
 
     async deleteDbUser(id:string): Promise<string>{
         const foundUser = await this.getDbUserbyId(id);
-        
         if(!foundUser) throw new NotFoundException("User no register");
         if(foundUser.status === false) throw new BadRequestException("User was eliminated");
-
         await this.usersDbRepository.update(id,{status:false});
         return id;
     }

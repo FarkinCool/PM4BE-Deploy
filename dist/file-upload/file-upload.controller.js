@@ -30,12 +30,37 @@ let FileUploadController = class FileUploadController {
 };
 exports.FileUploadController = FileUploadController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Add a imagen in a product' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'ID product', example: '1121qwewasd-qw54wqeqwe-45121' }),
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiConsumes)('multipart/form-data'),
     (0, swagger_1.ApiBody)({
-        description: 'Image of product',
-        type: fileUpload_dto_1.FileUploadDto
+        description: "Image of product: Files permitted are: jpg | png | jpeg | webp [with maxSize: 204800]",
+        type: fileUpload_dto_1.FileUploadDto,
+        required: true,
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Image file',
+                    example: 'file.jpg',
+                },
+            },
+            examples: {
+                example: {
+                    summary: "Files permitted are: jpg|png|jpeg|webp",
+                    value: {
+                        file: "file.jpg"
+                    }
+                }
+            }
+        },
     }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Product updated successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'The format used is incorrect :(' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'product not was updated :(' }),
     (0, common_1.Post)('uploadImage/:id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),

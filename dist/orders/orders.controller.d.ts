@@ -5,4 +5,5 @@ export declare class OrdersController {
     constructor(ordersService: OrdersService);
     getOrder(id: string): Promise<import("./orders.entity").Orders>;
     addOrder(order: CreateOrderDto): Promise<import("./orders.entity").Orders[]>;
+    deleteOrder(id: string): Promise<string>;
 }

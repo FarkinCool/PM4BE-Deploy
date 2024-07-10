@@ -24,8 +24,7 @@ let ProductsDbService = class ProductsDbService {
         this.productsRepository = productsRepository;
     }
     async createDbProduct(product) {
-        const newProduct = await this.productsDbRepository.save(product);
-        return newProduct.id;
+        return await this.productsRepository.createDbProduct(product);
     }
     async getDbProducts(page, limit) {
         const startIndex = (page - 1) * limit;

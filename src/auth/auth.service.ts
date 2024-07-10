@@ -12,7 +12,7 @@ export class AuthService{
         private readonly usersDbRepository: UsersDbService,
         private readonly jwtService: JwtService,        
      ){}
-    getAuth(): string{
+     getAuth(): string{
         return 'el auth para los users';
     }
 
@@ -47,7 +47,7 @@ export class AuthService{
         const userPayload = {
             id:user.id,
             email: user.email,
-            roles: user.isAdmin,
+            isAdmin: user.isAdmin
         };
         console.log(userPayload);
 

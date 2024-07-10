@@ -1,4 +1,5 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { ArrayMinSize, IsArray, IsEmpty, IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { Products } from "src/products/products.entity";
 
 export class CreateOrderDto{
@@ -18,5 +19,9 @@ export class CreateOrderDto{
     @IsArray()
     @ArrayMinSize(1)
     products: Partial<Products[]>;
+
+    @ApiHideProperty()
+    @IsEmpty()
+    status: boolean;
 
 }

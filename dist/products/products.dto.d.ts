@@ -4,5 +4,6 @@ export declare class CreateProductDto {
     price: number;
     stock: number;
     imgUrl: string;
+    categoryId: string;
     status: boolean;
 }

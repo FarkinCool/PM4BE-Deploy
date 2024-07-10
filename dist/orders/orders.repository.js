@@ -20,6 +20,7 @@ const typeorm_2 = require("typeorm");
 const orders_entity_1 = require("./orders.entity");
 const products_entity_1 = require("../products/products.entity");
 const orderDetails_entity_1 = require("../orderDetails/orderDetails.entity");
+const validUuid_utils_1 = require("../utils/validUuid.utils");
 let OrdersRepository = class OrdersRepository {
     constructor(userDbRepository, ordersDbRepository, productsDbRepository, ordersDbDetail) {
         this.userDbRepository = userDbRepository;
@@ -30,18 +31,28 @@ let OrdersRepository = class OrdersRepository {
     async addOrder(userId, products) {
         let total = 0;
         const findUserId = await this.userDbRepository.findOneBy({ id: userId });
+        console.log("userID", findUserId);
         if (!findUserId || findUserId.status === false)
             throw new common_1.NotFoundException("User can not buy products ", userId);
+        products.forEach(prod => {
+            if (!(0, validUuid_utils_1.isValidUUIDv4)(prod.id)) {
+                throw new common_1.BadRequestException("Invalid UUID format for product: " + prod.id);
+            }
+        });
         const nOrder = new orders_entity_1.Orders();
         nOrder.date = (new Date()).toDateString();
         nOrder.user = findUserId;
         const newOrder = await this.ordersDbRepository.save(nOrder);
         const productsArray = await Promise.all(products?.map(async (prod) => {
             const findProduct = await this.productsDbRepository.findOneBy({ id: prod.id });
+            console.log("para comprar: ", findProduct);
             if (!findProduct)
                 throw new common_1.NotFoundException("product not found with id: ", prod.id);
-            if (findProduct.stock <= 0 || findProduct.status === false)
-                throw new common_1.BadRequestException("product whitout stock, choose another one");
+            if (findProduct.stock <= 0 || findProduct.status === false) {
+                console.log("product whitout stock, choose another one");
+                return null;
+            }
+            console.log("el stock es:", findProduct.stock);
             total = total + Number(findProduct.price);
             await this.productsDbRepository.update({ id: prod.id }, { stock: findProduct.stock - 1 });
             return prod;
@@ -66,6 +77,23 @@ let OrdersRepository = class OrdersRepository {
         if (!foundOrder)
             throw new common_1.NotFoundException("order not found with id: ", id);
         return foundOrder;
+    }
+    async deleteOrder(orderId) {
+        const foundOrder = await this.ordersDbRepository.findOneBy({ id: orderId });
+        if (!foundOrder)
+            throw new common_1.NotFoundException("Order does not exist");
+        const foundUser = await this.userDbRepository.findOne({
+            where: { id: orderId }, relations: ['orders']
+        });
+        if (!foundUser || foundUser.status === false) {
+            if (foundOrder.status === false) {
+                throw new common_1.BadRequestException("this order was eliminated");
+            }
+            else {
+                await this.ordersDbRepository.update(orderId, { status: false });
+            }
+        }
+        return orderId;
     }
 };
 exports.OrdersRepository = OrdersRepository;

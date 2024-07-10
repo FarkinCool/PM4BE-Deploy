@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Products } from "./products.entity";
 import { Repository } from "typeorm";
-import { dataProducts } from "src/utils/archivo";
 import { CategoriesService } from "src/categories/categories.service";
 import { ProductsRepository } from "./products.repository";
+import { CreateProductDto } from "./products.dto";
 
 @Injectable()
 export class ProductsDbService{
@@ -12,9 +12,9 @@ export class ProductsDbService{
         @InjectRepository(Products) private readonly productsDbRepository:Repository<Products>,
         private readonly productsRepository:ProductsRepository 
     ){}
-    async createDbProduct(product:Partial <Products>): Promise<string>{
-        const newProduct = await this.productsDbRepository.save(product);
-        return newProduct.id;
+    async createDbProduct(product: CreateProductDto): Promise<string>{
+        //const newProduct = await this.productsDbRepository.save(product);
+        return await this.productsRepository.createDbProduct(product);
     }
 
     async getDbProducts(page:number, limit: number): Promise<Products[] >{

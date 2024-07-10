@@ -49,6 +49,11 @@ let ProductsController = class ProductsController {
 };
 exports.ProductsController = ProductsController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'List all products' }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: true, description: 'Page number', example: '1' }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: true, description: 'Number of items per page', example: '5' }),
+    (0, swagger_1.ApiResponse)({ status: 206, description: 'List of Products as requested :)' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'There are not products :(' }),
     (0, common_1.Get)(),
     openapi.ApiResponse({ status: 200, type: [require("./products.entity").Products] }),
     __param(0, (0, common_1.Query)('page')),
@@ -58,6 +63,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getDbProducts", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Reset of list of products' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of Products were reset :)' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Fail to reset of products seeder :(' }),
     (0, common_1.Get)('seeder'),
     openapi.ApiResponse({ status: 200, type: String }),
     __metadata("design:type", Function),
@@ -65,6 +73,10 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "resetProducts", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'list only one product by ID' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'ID product', example: '1121qwewasd-qw54wqeqwe-45121' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Product found successfuly :)' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Product not found :(' }),
     (0, common_1.Get)(':id'),
     openapi.ApiResponse({ status: 200, type: require("./products.entity").Products }),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
@@ -73,6 +85,25 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getDbProductById", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Created a new product' }),
+    (0, swagger_1.ApiBody)({ type: products_dto_1.CreateProductDto,
+        examples: {
+            example: {
+                summary: "Example of registering a new product",
+                value: {
+                    "name": 'Produc testMonitor',
+                    "description": 'product more efficient in the world',
+                    "price": 180.99,
+                    "stock": 12,
+                    "categoryId": '40899326-b545-430c-a92f-a6e3fbdb1b0e',
+                    "imgUrl": 'https://st4.depositphotos.com/14953852/22772/v/450/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg'
+                }
+            }
+        }
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'product created successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'The format used is incorrect :(' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'product not created :(' }),
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -83,6 +114,26 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "createDbProduct", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Edit data of product by Id' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'ID product', example: '1121qwewasd-qw54wqeqwe-45121' }),
+    (0, swagger_1.ApiBody)({ type: products_dto_1.CreateProductDto,
+        examples: {
+            example: {
+                summary: "Example of registering a new product",
+                value: {
+                    "name": 'Produc testMonitor',
+                    "description": 'product more efficient in the world',
+                    "price": 180.99,
+                    "stock": 12,
+                    "category": 'monitor',
+                    "imgUrl": 'https://st4.depositphotos.com/14953852/22772/v/450/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg',
+                }
+            }
+        }
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Product updated successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'The format used is incorrect :(' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'product not was updated :(' }),
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)(':id'),
     (0, roles_decorator_1.Roles)(user_roles_1.Role.Admin),
@@ -95,6 +146,10 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "updateDbProduct", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Delete of one product by Id' }),
+    (0, swagger_1.ApiParam)({ name: 'id', required: true, description: 'ID product', example: '1121qwewasd-qw54wqeqwe-45121' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Product deleted successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Product not was eliminated  :(' }),
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

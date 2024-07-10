@@ -1,5 +1,5 @@
 import { ApiHideProperty } from "@nestjs/swagger";
-import { IsBoolean, IsDecimal, IsEmpty, IsNotEmpty, IsNumber, IsString, MaxLength, isNumber } from "class-validator";
+import { IsBoolean, IsDecimal, IsEmpty, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, MaxLength, isNumber } from "class-validator";
 
 
 export class CreateProductDto{
@@ -26,8 +26,8 @@ export class CreateProductDto{
     * @example 96.37
     */
     @IsNotEmpty()
-    @IsNumber()
-    @IsDecimal({decimal_digits:'2'})    
+    @IsNumber({maxDecimalPlaces:2})
+    @IsPositive()    
     price: number;
 
     /**
@@ -36,6 +36,7 @@ export class CreateProductDto{
      */
     @IsNotEmpty()
     @IsNumber()
+    @IsPositive()  
     stock: number;
 
     /**
@@ -44,6 +45,14 @@ export class CreateProductDto{
     @IsNotEmpty()
     @IsString()
     imgUrl: string;
+
+    /**
+     * Debe ser un string no nulo; formato UUID
+     * @example: '1121qwewasd-qw54wqeqwe-45121'
+     */
+    @IsUUID()
+    @IsNotEmpty()
+    categoryId: string;
 
     @ApiHideProperty()
     @IsEmpty()

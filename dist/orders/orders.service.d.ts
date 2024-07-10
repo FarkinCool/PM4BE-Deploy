@@ -5,4 +5,5 @@ export declare class OrdersService {
     constructor(ordersRepository: OrdersRepository);
     addOrder(userId: string, products: Omit<Products[], 'id'>): Promise<import("./orders.entity").Orders[]>;
     getOrder(id: string): Promise<import("./orders.entity").Orders>;
+    deleteOrder(id: string): Promise<string>;
 }

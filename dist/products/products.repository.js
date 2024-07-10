@@ -18,8 +18,8 @@ const typeorm_1 = require("@nestjs/typeorm");
 const products_entity_1 = require("./products.entity");
 const typeorm_2 = require("typeorm");
 const categories_entity_1 = require("../categories/categories.entity");
-const archivo_1 = require("../utils/archivo");
 const orders_entity_1 = require("../orders/orders.entity");
+const archivo_utils_1 = require("../utils/archivo.utils");
 (0, common_1.Injectable)();
 let ProductsRepository = class ProductsRepository {
     constructor(productsRepository, categoriesRepository, ordersRepository) {
@@ -29,7 +29,7 @@ let ProductsRepository = class ProductsRepository {
     }
     async addProducts() {
         const categories = await this.categoriesRepository.find();
-        archivo_1.dataProducts?.map(async (ele) => {
+        archivo_utils_1.dataProducts?.map(async (ele) => {
             const category = categories.find((category) => category.name === ele.category);
             const product = new products_entity_1.Products();
             product.name = ele.name;
@@ -51,7 +51,7 @@ let ProductsRepository = class ProductsRepository {
     async resetProductsSeed() {
         const categories = await this.categoriesRepository.find();
         const skipProducts = new Set();
-        for (const dataproduct of archivo_1.dataProducts) {
+        for (const dataproduct of archivo_utils_1.dataProducts) {
             const foundProduct = await this.productsRepository.findOne({ where: { name: dataproduct.name } });
             if (foundProduct) {
                 const foundOrder = await this.ordersRepository.findOne({
@@ -64,7 +64,7 @@ let ProductsRepository = class ProductsRepository {
             }
         }
         console.log(skipProducts);
-        const resetProducts = archivo_1.dataProducts.filter((ele) => !skipProducts.has(ele.name));
+        const resetProducts = archivo_utils_1.dataProducts.filter((ele) => !skipProducts.has(ele.name));
         for (const ele of resetProducts) {
             const category = categories.find((category) => category.name === ele.category);
             const productToUpdate = await this.productsRepository.findOne({ where: { name: ele.name } });
@@ -90,6 +90,19 @@ let ProductsRepository = class ProductsRepository {
             }
         }
         return 'Products whitout orders were reset';
+    }
+    async createDbProduct(productDto) {
+        const { categoryId, ...productData } = productDto;
+        const category = await this.categoriesRepository.findOneBy({ id: categoryId });
+        if (!category) {
+            throw new common_1.NotFoundException("Category with ID not found");
+        }
+        const newProduct = this.productsRepository.create({
+            ...productData,
+            category,
+        });
+        await this.productsRepository.save(newProduct);
+        return newProduct.id;
     }
 };
 exports.ProductsRepository = ProductsRepository;

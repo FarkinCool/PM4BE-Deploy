@@ -17,6 +17,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const users_entity_1 = require("./users.entity");
 const common_1 = require("@nestjs/common");
 const typeorm_2 = require("typeorm");
+const bcrypt = require("bcrypt");
 let UsersDbService = class UsersDbService {
     constructor(usersDbRepository) {
         this.usersDbRepository = usersDbRepository;
@@ -39,12 +40,29 @@ let UsersDbService = class UsersDbService {
         const userfound = await this.usersDbRepository.findOne({ where: { id },
             relations: { orders: true }
         });
+        console.log("hola", userfound);
         if (!userfound)
             throw new common_1.NotFoundException("User not found with ID: ", id);
         return userfound;
     }
     async updateDbUser(id, user) {
-        await this.usersDbRepository.update(id, user);
+        const foundUser = await this.getDbUserbyId(id);
+        if (!foundUser)
+            throw new common_1.NotFoundException("User not found");
+        const { password, confirmpassword } = user;
+        if ((password && !confirmpassword) || !password && confirmpassword)
+            throw new common_1.BadRequestException("both passwords should be present");
+        if (password && confirmpassword) {
+            const hashpassword = await bcrypt.hash(password, 10);
+            if (!hashpassword)
+                throw new common_1.BadRequestException("error in hashing password");
+            delete user.confirmpassword;
+            await this.usersDbRepository.update(id, { ...user,
+                password: hashpassword, });
+        }
+        else {
+            await this.usersDbRepository.update(id, user);
+        }
         return id;
     }
     async deleteDbUser(id) {

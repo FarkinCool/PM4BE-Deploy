@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import IProductsData from "src/interfaces/IProducts";
 import { Products } from "./products.entity";
 import { Repository } from "typeorm";
 import { Categories } from "src/categories/categories.entity";
-import { dataProducts } from "src/utils/archivo";
-import { writeHeapSnapshot } from "v8";
 import { Orders } from "src/orders/orders.entity";
+import { CreateProductDto } from "./products.dto";
+import { dataProducts } from "src/utils/archivo.utils";
 
 
 
@@ -95,6 +95,23 @@ export class ProductsRepository{
 
     return 'Products whitout orders were reset';
 
+  }
+
+  async createDbProduct(productDto: CreateProductDto): Promise<string> {
+    const { categoryId, ...productData } = productDto;
+
+    const category = await this.categoriesRepository.findOneBy({id:categoryId});
+    if (!category) {
+      throw new NotFoundException("Category with ID not found");
+    }
+
+    const newProduct = this.productsRepository.create({
+      ...productData,
+      category,
+    });
+
+    await this.productsRepository.save(newProduct);
+    return newProduct.id;
   }
 
 

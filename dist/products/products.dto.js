@@ -15,7 +15,7 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateProductDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, description: "Debe ingresar un string, de 50 caracteres como maximo, no nulo , para el nombre de un producto", example: "Logitech G pro", maxLength: 50 }, description: { required: true, type: () => String, description: "Debe ingresar un string, no nulo; para la descripcion del producto", example: "el mejor teclado" }, price: { required: true, type: () => Number, description: "Debe ingresar un numero decimal de 2 digitos, no nulo; para el precio del producto", example: 96.37 }, stock: { required: true, type: () => Number, description: "Debe ingresar un numero entero, no nulo; para el stock del producto", example: 12 }, imgUrl: { required: true, type: () => String, description: "Debe ser un string no nulo; para la imagen(una URL de una imagen)" } };
+        return { name: { required: true, type: () => String, description: "Debe ingresar un string, de 50 caracteres como maximo, no nulo , para el nombre de un producto", example: "Logitech G pro", maxLength: 50 }, description: { required: true, type: () => String, description: "Debe ingresar un string, no nulo; para la descripcion del producto", example: "el mejor teclado" }, price: { required: true, type: () => Number, description: "Debe ingresar un numero decimal de 2 digitos, no nulo; para el precio del producto", example: 96.37, minimum: 1 }, stock: { required: true, type: () => Number, description: "Debe ingresar un numero entero, no nulo; para el stock del producto", example: 12, minimum: 1 }, imgUrl: { required: true, type: () => String, description: "Debe ser un string no nulo; para la imagen(una URL de una imagen)" }, categoryId: { required: true, type: () => String, description: "Debe ser un string no nulo; formato UUID\n@example: '1121qwewasd-qw54wqeqwe-45121'" } };
     }
 }
 exports.CreateProductDto = CreateProductDto;
@@ -32,13 +32,14 @@ __decorate([
 ], CreateProductDto.prototype, "description", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsDecimal)({ decimal_digits: '2' }),
+    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 2 }),
+    (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "price", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "stock", void 0);
 __decorate([
@@ -46,6 +47,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "imgUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsUUID)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "categoryId", void 0);
 __decorate([
     (0, swagger_1.ApiHideProperty)(),
     (0, class_validator_1.IsEmpty)(),

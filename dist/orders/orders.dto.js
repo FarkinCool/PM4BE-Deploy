@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateOrderDto = void 0;
 const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateOrderDto {
     static _OPENAPI_METADATA_FACTORY() {
@@ -29,4 +30,9 @@ __decorate([
     (0, class_validator_1.ArrayMinSize)(1),
     __metadata("design:type", Object)
 ], CreateOrderDto.prototype, "products", void 0);
+__decorate([
+    (0, swagger_1.ApiHideProperty)(),
+    (0, class_validator_1.IsEmpty)(),
+    __metadata("design:type", Boolean)
+], CreateOrderDto.prototype, "status", void 0);
 //# sourceMappingURL=orders.dto.js.map

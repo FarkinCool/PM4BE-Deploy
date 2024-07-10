@@ -1,8 +1,8 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { dataProducts } from "src/utils/archivo";
 import { Categories } from "./categories.entity";
 import { Repository } from "typeorm";
+import { dataProducts } from "src/utils/archivo.utils";
 
 
 

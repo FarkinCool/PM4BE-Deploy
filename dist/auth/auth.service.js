@@ -49,7 +49,7 @@ let AuthService = class AuthService {
         const userPayload = {
             id: user.id,
             email: user.email,
-            roles: user.isAdmin,
+            isAdmin: user.isAdmin
         };
         console.log(userPayload);
         const token = this.jwtService.sign(userPayload);

@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const archivo_1 = require("../utils/archivo");
 const categories_entity_1 = require("./categories.entity");
 const typeorm_2 = require("typeorm");
+const archivo_utils_1 = require("../utils/archivo.utils");
 let CategoriesService = class CategoriesService {
     constructor(categoriesDbRepository) {
         this.categoriesDbRepository = categoriesDbRepository;
@@ -34,7 +34,7 @@ let CategoriesService = class CategoriesService {
         return await this.categoriesDbRepository.find();
     }
     async addCategories() {
-        const categoriesName = await new Set(archivo_1.dataProducts.map(cat => cat.category));
+        const categoriesName = await new Set(archivo_utils_1.dataProducts.map(cat => cat.category));
         const listCategories = Array.from(categoriesName);
         if (listCategories.length === 0)
             throw new common_1.NotFoundException("There not registers in categories Data");
@@ -56,15 +56,15 @@ let CategoriesService = class CategoriesService {
         return "Categories reload";
     }
     async resetCategories() {
-        const categoriesName = await new Set(archivo_1.dataProducts.map(cat => cat.category));
+        const categoriesName = await new Set(archivo_utils_1.dataProducts.map(cat => cat.category));
         const skipCategories = new Set();
-        for (const datacategory of archivo_1.dataProducts) {
+        for (const datacategory of archivo_utils_1.dataProducts) {
             const foundCategory = await this.categoriesDbRepository.findOne({ where: { name: datacategory.category } });
             if (foundCategory) {
                 skipCategories.add(foundCategory);
             }
         }
-        const resetCategories = archivo_1.dataProducts.filter((ele) => !skipCategories.has(ele.category));
+        const resetCategories = archivo_utils_1.dataProducts.filter((ele) => !skipCategories.has(ele.category));
         for (const ele of resetCategories) {
             const categorieToUpdate = await this.categoriesDbRepository.findOne({ where: { name: ele.category } });
             if (categorieToUpdate) {

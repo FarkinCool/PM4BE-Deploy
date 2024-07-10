@@ -24,9 +24,6 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    getAuth() {
-        return this.authService.getAuth();
-    }
     signIn(credentials) {
         const { email, password } = credentials;
         return this.authService.signIn(email, password);
@@ -34,16 +31,26 @@ let AuthController = class AuthController {
     signUp(user) {
         return this.authService.signUp(user);
     }
+    getAuth() {
+        return this.authService.getAuth();
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Get)(),
-    openapi.ApiResponse({ status: 200, type: String }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getAuth", null);
-__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Login of user' }),
+    (0, swagger_1.ApiBody)({ type: auth_dto_1.LoginUserDto,
+        examples: {
+            example: {
+                summary: "Example of login of user",
+                value: {
+                    "email": "alice.jones@example.com",
+                    "password": "Alice123+"
+                }
+            }
+        }
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Logued successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Credentials used are incorrect :(' }),
     (0, common_1.Post)('signin'),
     openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Body)()),
@@ -52,6 +59,26 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signIn", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Register of user' }),
+    (0, swagger_1.ApiBody)({ type: users_dto_1.CreateUserDto,
+        examples: {
+            example: {
+                summary: "Example of registering a new user",
+                value: {
+                    "email": "alice.jones@example.com",
+                    "name": "Alice Jones",
+                    "password": "Alice123+",
+                    "confirmpassword": "Alice123+",
+                    "address": "789 Oak St",
+                    "phone": 112233445,
+                    "country": "Canada",
+                    "city": "Toronto"
+                }
+            }
+        }
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'user created successfully :)' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'The format used is incorrect :(' }),
     (0, common_1.Post)('signup'),
     (0, common_1.UseInterceptors)(deletePass_interceptor_1.DeletePasswordInterceptor),
     openapi.ApiResponse({ status: 201, type: require("../users/users.entity").User }),
@@ -60,6 +87,14 @@ __decorate([
     __metadata("design:paramtypes", [users_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signUp", null);
+__decorate([
+    (0, swagger_1.ApiExcludeEndpoint)(),
+    (0, common_1.Get)(),
+    openapi.ApiResponse({ status: 200, type: String }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getAuth", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('auth'),
     (0, common_1.Controller)('auth'),

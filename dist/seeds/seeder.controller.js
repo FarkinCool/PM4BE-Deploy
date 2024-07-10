@@ -25,6 +25,7 @@ let SeederController = class SeederController {
 };
 exports.SeederController = SeederController;
 __decorate([
+    (0, swagger_1.ApiExcludeEndpoint)(),
     (0, common_1.Post)('automatic'),
     openapi.ApiResponse({ status: 201 }),
     __metadata("design:type", Function),

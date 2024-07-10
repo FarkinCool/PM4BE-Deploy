@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Orders = void 0;
 const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const orderDetails_entity_1 = require("../orderDetails/orderDetails.entity");
 const users_entity_1 = require("../users/users.entity");
 const typeorm_1 = require("typeorm");
@@ -28,6 +29,11 @@ __decorate([
     (0, typeorm_1.Column)({ type: "date", nullable: false }),
     __metadata("design:type", String)
 ], Orders.prototype, "date", void 0);
+__decorate([
+    (0, swagger_1.ApiHideProperty)(),
+    (0, typeorm_1.Column)({ type: "boolean", default: true }),
+    __metadata("design:type", Boolean)
+], Orders.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => users_entity_1.User, (user) => user.orders),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),

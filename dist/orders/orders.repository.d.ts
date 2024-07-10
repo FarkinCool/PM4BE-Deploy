@@ -11,4 +11,5 @@ export declare class OrdersRepository {
     constructor(userDbRepository: Repository<User>, ordersDbRepository: Repository<Orders>, productsDbRepository: Repository<Products>, ordersDbDetail: Repository<OrderDetails>);
     addOrder(userId: string, products: ProductsEntity[]): Promise<Orders[]>;
     getOrder(id: string): Promise<Orders>;
+    deleteOrder(orderId: string): Promise<string>;
 }

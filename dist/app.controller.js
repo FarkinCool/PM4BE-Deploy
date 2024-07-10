@@ -13,6 +13,7 @@ exports.AppController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const swagger_1 = require("@nestjs/swagger");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
@@ -23,6 +24,7 @@ let AppController = class AppController {
 };
 exports.AppController = AppController;
 __decorate([
+    (0, swagger_1.ApiExcludeEndpoint)(),
     (0, common_1.Get)(),
     openapi.ApiResponse({ status: 200, type: String }),
     __metadata("design:type", Function),

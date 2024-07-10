@@ -24,6 +24,11 @@ let RolesGuard = class RolesGuard {
         const request = context.switchToHttp().getRequest();
         const user = request.user;
         const hasRole = () => requiredRoles.some((role) => user?.roles?.includes(role));
+        console.log("user", user);
+        console.log("********");
+        console.log("user roles", user.roles);
+        console.log(requiredRoles);
+        console.log("hasrole", hasRole());
         const valid = user && user.roles && hasRole();
         if (!valid)
             throw new common_1.ForbiddenException('No tiene permisos para acceder a esta ruta');

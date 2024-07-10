@@ -22,6 +22,9 @@ let OrdersService = class OrdersService {
     getOrder(id) {
         return this.ordersRepository.getOrder(id);
     }
+    deleteOrder(id) {
+        return this.ordersRepository.deleteOrder(id);
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([
